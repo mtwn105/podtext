@@ -28,9 +28,7 @@ const Episode: NextPage<{ data: any }> = ({ data }) => {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        process.env.NEXT_PUBLIC_APP_URL + "/api/transcribe?audio=" + audio
-      );
+      const response = await transcribeApi(audio);
 
       const data = await response.json();
 
@@ -184,6 +182,12 @@ export async function getServerSideProps({
       },
     },
   };
+}
+
+export function transcribeApi(audio: string) {
+  return fetch(
+    process.env.NEXT_PUBLIC_APP_URL + "/api/transcribe?audio=" + audio
+  );
 }
 
 export default Episode;
