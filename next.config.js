@@ -9,6 +9,9 @@ const nextConfig = {
   images: {
     domains: ["cdn-images-1.listennotes.com"],
   },
+  experimental: {
+    outputStandalone: true,
+  },
 };
 
 // const withImages = require("next-images");

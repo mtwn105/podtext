@@ -99,9 +99,19 @@ const Home: NextPage<{ data: any }> = ({ data }) => {
 };
 
 // Server side props
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps({
+  res,
+  query,
+}: {
+  res: any;
+  query: any;
+}) {
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=100, stale-while-revalidate=200"
+  );
   // Get the genre id from the url
-  const genre_id = context.query.id;
+  const genre_id = query.id;
 
   // If apiKey is null, then we will connect to a mock server
   // that returns fake data for testing purposes.

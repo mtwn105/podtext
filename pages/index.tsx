@@ -68,7 +68,11 @@ const Home: NextPage<{ data: Genre[] }> = ({ data }: { data: Genre[] }) => {
 };
 
 // Server side props
-export async function getServerSideProps() {
+export async function getServerSideProps({ res }: { res: any }) {
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=100, stale-while-revalidate=200"
+  );
   // If apiKey is null, then we will connect to a mock server
   // that returns fake data for testing purposes.
   const client = Client({ apiKey: process.env.API_KEY });
