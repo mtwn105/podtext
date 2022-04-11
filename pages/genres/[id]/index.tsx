@@ -1,12 +1,20 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../../../styles/Home.module.css";
 // @ts-ignore
 import { Client } from "podcast-api";
-import Genre from "../../../types/Genre";
+import { Grid, Card, Text, Button } from "@nextui-org/react";
+import { useRouter } from "next/router";
 
 const Home: NextPage<{ data: any }> = ({ data }) => {
+  const router = useRouter();
+
+  const navigate = (e: any, href: string) => {
+    e.preventDefault();
+    console.log(href);
+    router.push(href);
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -18,22 +26,50 @@ const Home: NextPage<{ data: any }> = ({ data }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main>
         <h1 className={styles.title}>
           <a href="">{data.genre.name}</a> Best Podcasts
         </h1>
         <p>These are based on US region</p>
 
-        <div className={styles.grid}>
+        <Grid.Container gap={2} justify="center">
           {data.podcasts.map(
-            ({ id, title, thumbnail, description, publisher }) => (
-              <a key={id} href={`/podcasts/${id}`} className={styles.card}>
-                <h2>{title}</h2>
-                <p>By {publisher}</p>
-              </a>
+            ({
+              id,
+              title,
+              publisher,
+            }: {
+              id: number;
+              title: string;
+              publisher: string;
+            }) => (
+              <Grid key={id} md={3}>
+                <Card css={{ w: "100%" }}>
+                  <Text h3>{title}</Text>
+                  <Text>🚀 By {publisher}</Text>
+                  <Card.Footer>
+                    <Button
+                      onClick={(e) => navigate(e, `/podcasts/${id}`)}
+                      flat
+                      auto
+                      rounded
+                      color="secondary"
+                    >
+                      <Text
+                        css={{ color: "inherit" }}
+                        size={12}
+                        weight="bold"
+                        transform="uppercase"
+                      >
+                        View podcasts
+                      </Text>
+                    </Button>
+                  </Card.Footer>
+                </Card>
+              </Grid>
             )
           )}
-        </div>
+        </Grid.Container>
       </main>
 
       <footer className={styles.footer}>

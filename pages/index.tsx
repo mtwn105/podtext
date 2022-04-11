@@ -1,12 +1,21 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 // @ts-ignore
 import { Client } from "podcast-api";
 import Genre from "../types/Genre";
+import { Grid, Card, Text } from "@nextui-org/react";
+import { useRouter } from "next/router";
 
 const Home: NextPage<{ data: Genre[] }> = ({ data }: { data: Genre[] }) => {
+  const router = useRouter();
+
+  const navigate = (e: any, href: string) => {
+    e.preventDefault();
+    console.log(href);
+    router.push(href);
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -24,16 +33,25 @@ const Home: NextPage<{ data: Genre[] }> = ({ data }: { data: Genre[] }) => {
         </h1>
 
         <p className={styles.description}>
+          Now Read your favourite podcasts!
+          <br />
           Get started by clicking on your favourite genre
         </p>
 
-        <div className={styles.grid}>
+        <Grid.Container gap={2} justify="center">
           {data.map(({ id, name }) => (
-            <a key={id} href={`/genres/${id}`} className={styles.card}>
-              <h2>{name}</h2>
-            </a>
+            <Grid key={id} md={3}>
+              <Card
+                onClick={(e) => navigate(e, `/genres/${id}`)}
+                hoverable
+                clickable
+                css={{ width: "100%" }}
+              >
+                <Text h3>{name}</Text>
+              </Card>
+            </Grid>
           ))}
-        </div>
+        </Grid.Container>
       </main>
 
       <footer className={styles.footer}>

@@ -6,10 +6,30 @@ import styles from "../../../styles/Home.module.css";
 import { Client } from "podcast-api";
 import "react-h5-audio-player/lib/styles.css";
 import { useState } from "react";
+import { Grid, Card, Text, Link, Button, Loading } from "@nextui-org/react";
+import { useRouter } from "next/router";
 
-const Home: NextPage<{ data: any }> = ({ data }) => {
+const Episode: NextPage<{ data: any }> = ({ data }) => {
   // Transcript state
   const [transcript, setTranscript] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const transcribe = async (audio: string) => {
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        "http://localhost:3001/api/transcribe?audio=" + audio
+      );
+
+      const data = await response.json();
+
+      setTranscript(data.transcript);
+    } catch (err) {
+      console.log(err);
+    }
+    setLoading(false);
+  };
 
   return (
     <div className={styles.container}>
@@ -33,47 +53,54 @@ const Home: NextPage<{ data: any }> = ({ data }) => {
             minute: "2-digit",
           }).format(new Date(data.episode.pub_date_ms))}
         </p>
-        <div
+        <Text
           dangerouslySetInnerHTML={{ __html: data.episode.description }}
-        ></div>
+        ></Text>
 
-        <Image
-          width={300}
-          height={300}
-          objectFit="cover"
-          src={data.episode.image}
-          alt=""
-        />
+        <Card css={{ mw: "fit-content" }}>
+          <Card.Body>
+            <Card.Image
+              src={data.episode.image}
+              height={300}
+              width="100%"
+              alt={data.episode.title}
+            />
+          </Card.Body>
+          <Card.Footer>
+            <Button
+              disabled={loading}
+              onClick={(e) => {
+                e.preventDefault();
+                transcribe(data.episode.audio);
+              }}
+              flat
+              auto
+              rounded
+              color="secondary"
+            >
+              {loading ? (
+                <Loading type="points" color="currentColor" size="sm" />
+              ) : (
+                <Text
+                  css={{ color: "inherit" }}
+                  size={12}
+                  weight="bold"
+                  transform="uppercase"
+                >
+                  Transcribe
+                </Text>
+              )}
+            </Button>
+          </Card.Footer>
+        </Card>
 
-        {/* Button to transcribe the audio */}
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            transcribe(data.episode.audio, setTranscript);
-          }}
-        >
-          Transcribe
-        </button>
-
-        <p>{transcript}</p>
-
-        {/* <Player
-          trackList={data.trackList}
-          includeTags={false}
-          includeSearch={false}
-          showPlaylist={false}
-          autoPlayNextTrack={false}
-        /> */}
-
-        {/* <ReactPlayer url={data.episode.audio} /> */}
-
-        {/* <audio></audio>
-        <AudioPlayer
-          src={data.episode.audio}
-          // other props here
-          showSkipControls
-          autoPlayAfterSrcChange
-        /> */}
+        {!!transcript ? (
+          <Card css={{ w: "100%", m: "1rem" }}>
+            <Card.Body>
+              <Text>{transcript}</Text>
+            </Card.Body>
+          </Card>
+        ) : null}
       </main>
 
       <footer className={styles.footer}>
@@ -104,33 +131,19 @@ export async function getServerSideProps(context: any) {
 
   console.log(response.data);
 
-  const trackList = [
-    {
-      url: response.data.audio,
-      title: response.data.title,
-    },
-  ];
+  let episode = response.data;
+
+  episode.description = episode.description.replaceAll("<br><br>", "<br>");
 
   // Transcribe audio
 
   return {
     props: {
       data: {
-        episode: response.data,
-        trackList,
+        episode,
       },
     },
   };
 }
 
-const transcribe = async (audio: string, setTranscript: any) => {
-  const response = await fetch(
-    "http://localhost:3000/api/transcribe?audio=" + audio
-  );
-
-  const data = await response.json();
-
-  setTranscript(data.transcript);
-};
-
-export default Home;
+export default Episode;
