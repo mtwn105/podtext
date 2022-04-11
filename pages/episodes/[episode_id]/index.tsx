@@ -29,7 +29,7 @@ const Episode: NextPage<{ data: any }> = ({ data }) => {
 
     try {
       const response = await fetch(
-        process.env.APP_URL + "/api/transcribe?audio=" + audio
+        process.env.NEXT_PUBLIC_APP_URL + "/api/transcribe?audio=" + audio
       );
 
       const data = await response.json();

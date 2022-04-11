@@ -4,7 +4,7 @@ const nextConfig = {
   env: {
     API_KEY: process.env.API_KEY,
     DEEPGRAM_API_SECRET: process.env.DEEPGRAM_API_SECRET,
-    APP_URL: process.env.APP_URL,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   images: {
     domains: ["cdn-images-1.listennotes.com"],
