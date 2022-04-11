@@ -25,11 +25,22 @@ const Home: NextPage<{ data: any }> = ({ data }) => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>{data.podcast.title}</h1>
-        <h2>By {data.podcast.publisher}</h2>
-        <div
+        <Text
+          h1
+          css={{
+            textGradient: "45deg, $blue500 -20%, $pink500 50%",
+          }}
+          className={styles.title}
+        >
+          {data.podcast.title}
+        </Text>
+        <Text h2>By {data.podcast.publisher}</Text>
+        <Text
+          css={{
+            m: "1rem",
+          }}
           dangerouslySetInnerHTML={{ __html: data.podcast.description }}
-        ></div>
+        ></Text>
 
         <Image
           width={300}
@@ -40,10 +51,10 @@ const Home: NextPage<{ data: any }> = ({ data }) => {
         />
 
         <Text
-          h1
-          size={60}
+          h2
           css={{
             textGradient: "45deg, $blue500 -20%, $pink500 50%",
+            m: "1rem",
           }}
           weight="bold"
         >

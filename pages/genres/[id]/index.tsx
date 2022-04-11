@@ -27,10 +27,23 @@ const Home: NextPage<{ data: any }> = ({ data }) => {
       </Head>
 
       <main>
-        <h1 className={styles.title}>
-          <a href="">{data.genre.name}</a> Best Podcasts
-        </h1>
-        <p>These are based on US region</p>
+        <Text className={styles.title}>
+          <Text
+            h1
+            size={70}
+            css={{
+              textGradient: "45deg, $blue500 -20%, $pink500 50%",
+              m: "1rem",
+            }}
+            className={styles.title}
+          >
+            {data.genre.name}
+          </Text>{" "}
+          Best Podcasts
+        </Text>
+        <Text css={{ textAlign: "center", m: "1rem" }}>
+          *These are based on US region
+        </Text>
 
         <Grid.Container gap={2} justify="center">
           {data.podcasts.map(

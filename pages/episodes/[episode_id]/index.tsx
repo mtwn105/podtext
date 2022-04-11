@@ -6,7 +6,17 @@ import styles from "../../../styles/Home.module.css";
 import { Client } from "podcast-api";
 import "react-h5-audio-player/lib/styles.css";
 import { useState } from "react";
-import { Grid, Card, Text, Link, Button, Loading } from "@nextui-org/react";
+import {
+  Collapse,
+  Grid,
+  Card,
+  Text,
+  Link,
+  Button,
+  Loading,
+  Row,
+  Col,
+} from "@nextui-org/react";
 import { useRouter } from "next/router";
 
 const Episode: NextPage<{ data: any }> = ({ data }) => {
@@ -19,7 +29,7 @@ const Episode: NextPage<{ data: any }> = ({ data }) => {
 
     try {
       const response = await fetch(
-        "http://localhost:3001/api/transcribe?audio=" + audio
+        process.env.APP_URL + "/api/transcribe?audio=" + audio
       );
 
       const data = await response.json();
@@ -40,7 +50,15 @@ const Episode: NextPage<{ data: any }> = ({ data }) => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>{data.episode.title}</h1>
+        <Text
+          h1
+          css={{
+            textGradient: "45deg, $blue500 -20%, $pink500 50%",
+          }}
+          className={styles.title}
+        >
+          {data.episode.title}
+        </Text>
         <h2>From {data.episode.podcast.title}</h2>
         <h3>By {data.episode.podcast.publisher}</h3>
         <p>
@@ -53,9 +71,12 @@ const Episode: NextPage<{ data: any }> = ({ data }) => {
             minute: "2-digit",
           }).format(new Date(data.episode.pub_date_ms))}
         </p>
-        <Text
-          dangerouslySetInnerHTML={{ __html: data.episode.description }}
-        ></Text>
+
+        <Collapse css={{ marginBottom: "1rem" }} title="Description">
+          <Text
+            dangerouslySetInnerHTML={{ __html: data.episode.description }}
+          ></Text>
+        </Collapse>
 
         <Card css={{ mw: "fit-content" }}>
           <Card.Body>
@@ -67,30 +88,39 @@ const Episode: NextPage<{ data: any }> = ({ data }) => {
             />
           </Card.Body>
           <Card.Footer>
-            <Button
-              disabled={loading}
-              onClick={(e) => {
-                e.preventDefault();
-                transcribe(data.episode.audio);
-              }}
-              flat
-              auto
-              rounded
-              color="secondary"
-            >
-              {loading ? (
-                <Loading type="points" color="currentColor" size="sm" />
-              ) : (
-                <Text
-                  css={{ color: "inherit" }}
-                  size={12}
-                  weight="bold"
-                  transform="uppercase"
-                >
-                  Transcribe
-                </Text>
-              )}
-            </Button>
+            <Row justify="center" align="center">
+              <Col>
+                <Text size={12}>Powered by Deepgram</Text>
+              </Col>
+              <Col>
+                <Row justify="flex-end">
+                  <Button
+                    disabled={loading}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      transcribe(data.episode.audio);
+                    }}
+                    flat
+                    auto
+                    rounded
+                    color="secondary"
+                  >
+                    {loading ? (
+                      <Loading type="points" color="currentColor" size="sm" />
+                    ) : (
+                      <Text
+                        css={{ color: "inherit" }}
+                        size={12}
+                        weight="bold"
+                        transform="uppercase"
+                      >
+                        Transcribe
+                      </Text>
+                    )}
+                  </Button>
+                </Row>
+              </Col>
+            </Row>
           </Card.Footer>
         </Card>
 
