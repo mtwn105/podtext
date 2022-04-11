@@ -71,7 +71,7 @@ const Home: NextPage<{ data: Genre[] }> = ({ data }: { data: Genre[] }) => {
 export async function getServerSideProps() {
   // If apiKey is null, then we will connect to a mock server
   // that returns fake data for testing purposes.
-  const client = Client({ apiKey: null });
+  const client = Client({ apiKey: process.env.API_KEY });
   const response = await client.fetchPodcastGenres({
     top_level_only: 1,
   });

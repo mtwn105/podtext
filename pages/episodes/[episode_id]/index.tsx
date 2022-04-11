@@ -153,7 +153,7 @@ export async function getServerSideProps(context: any) {
 
   // If apiKey is null, then we will connect to a mock server
   // that returns fake data for testing purposes.
-  const client = Client({ apiKey: null });
+  const client = Client({ apiKey: process.env.API_KEY });
 
   const response = await client.fetchEpisodeById({
     id: episode_id,
