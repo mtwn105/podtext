@@ -83,7 +83,7 @@ const Episode: NextPage<{ data: any }> = ({ data }) => {
             <Card.Image
               src={data.episode.image}
               height={300}
-              width="100%"
+              width={300}
               alt={data.episode.title}
             />
           </Card.Body>
