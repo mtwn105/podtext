@@ -127,6 +127,9 @@ const Episode: NextPage<{ data: any }> = ({ data }) => {
         {!!transcript ? (
           <Card css={{ w: "100%", m: "1rem" }}>
             <Card.Body>
+              <Text h3 css={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                Transcription
+              </Text>
               <Text>{transcript}</Text>
             </Card.Body>
           </Card>
