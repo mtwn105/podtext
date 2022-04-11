@@ -132,9 +132,6 @@ export async function getServerSideProps(context: any) {
   console.log(response.data);
 
   let episode = response.data;
-
-  episode.description = episode.description.replaceAll("<br><br>", "<br>");
-
   // Transcribe audio
 
   return {
