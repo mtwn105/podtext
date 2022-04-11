@@ -28,11 +28,11 @@ const Episode: NextPage<{ data: any }> = ({ data }) => {
     setLoading(true);
 
     try {
-      const response = await transcribeApi(audio);
+      const response = await fetch(data.url + "api/transcribe?audio=" + audio);
 
-      const data = await response.json();
+      const resData = await response.json();
 
-      setTranscript(data.transcript);
+      setTranscript(resData.transcript);
     } catch (err) {
       console.log(err);
     }
@@ -164,7 +164,8 @@ export async function getServerSideProps({
 
   // If apiKey is null, then we will connect to a mock server
   // that returns fake data for testing purposes.
-  const client = Client({ apiKey: process.env.API_KEY });
+  // const client = Client({ apiKey: process.env.API_KEY });
+  const client = Client({ apiKey: null });
 
   const response = await client.fetchEpisodeById({
     id: episode_id,
@@ -179,15 +180,10 @@ export async function getServerSideProps({
     props: {
       data: {
         episode,
+        url: process.env.NEXT_PUBLIC_APP_URL,
       },
     },
   };
-}
-
-export function transcribeApi(audio: string) {
-  return fetch(
-    process.env.NEXT_PUBLIC_APP_URL + "/api/transcribe?audio=" + audio
-  );
 }
 
 export default Episode;
